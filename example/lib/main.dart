@@ -117,8 +117,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 // print("Backspace button pressed");
               },
               keyboardConfig: KeyboardConfig(
-                useEmoji: true,
-                useGif: true,
+                useEmoji: false,
+                useGif: false,
                 useSticker: true,
                 giphyAPIKey: "",
                 gifTabs: ["Hey", "One", 'Haha', 'Sad', 'Love', 'Reaction'],
@@ -145,7 +145,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 skinToneDialogBgColor: Colors.white,
                 skinToneIndicatorColor: Colors.grey,
                 enableSkinTones: true,
-                showRecentsTab: true,
+                showRecentsTab: false,
                 recentsLimit: 28,
                 noRecents: const Text(
                   'No Recents',
@@ -156,6 +156,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 ),
                 replaceRecentOnLimitExceed: true,
+                showBottomNav: false,
                 tabIndicatorAnimDuration: kTabScrollDuration,
                 categoryIcons: const CategoryIcons(),
                 buttonMode: ButtonMode.CUPERTINO,
@@ -183,7 +184,46 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                           category: 'Test2'),
                       Sticker(
                           assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2')
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
+                      Sticker(
+                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
+                          category: 'Test2'),
                     ],
                   ),
                 ],
