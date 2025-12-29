@@ -40,6 +40,7 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
   List<RecentSticker> _recentSticker = List.empty(growable: true);
 
   bool _loaded = false;
+  int _currentTabIndex = 0;
 
   void updateRecentSticker(List<RecentSticker> recentSticker,
       {bool refresh = false}) {
@@ -79,18 +80,38 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
     _tabs.addAll(tabsTitle);
     _tabController = TabController(
         initialIndex: initCategory, length: _tabs.length, vsync: this)
-      ..addListener(() => widget.scrollStream.add('showNav'));
+      ..addListener(() {
+        widget.scrollStream.add('showNav');
+        final nextIndex = _tabController?.index ?? 0;
+        if (nextIndex != _currentTabIndex && mounted) {
+          setState(() {
+            _currentTabIndex = nextIndex;
+          });
+        }
+      });
+    _currentTabIndex = _tabController?.index ?? 0;
 
     //Get stickers and group them based on tabs
     _updateStickers();
   }
 
-  Widget _buildCategory(int index, String title) {
+  Widget _buildCategory(int index, CategorySticker category) {
+    final tabBuilder = widget.keyboardConfig.categoryTabBuilder;
+    if (tabBuilder != null) {
+      return Tab(
+        child: tabBuilder(
+          context,
+          category,
+          _currentTabIndex == index,
+        ),
+      );
+    }
+
     return Tab(
       child: index == 0 && widget.keyboardConfig.showRecentsTab
           ? const Icon(Icons.access_time)
           : Text(
-              title.toUpperCase(),
+              category.category.toUpperCase(),
               textAlign: TextAlign.center,
             ),
     );
@@ -163,7 +184,7 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
                     onTap: (index) {
                       _pageController!.jumpToPage(index);
                     },
-                    tabs: _tabs
+                    tabs: _categorySticker
                         .asMap()
                         .entries
                         .map((item) => _buildCategory(item.key, item.value))

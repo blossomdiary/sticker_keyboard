@@ -61,6 +61,29 @@ StickerKeyboard(
         ],
       ),
     ],
+    categoryTabBuilder: (context, category, isSelected) {
+      if (category.category == 'Recents') {
+        return Icon(
+          Icons.access_time,
+          color: isSelected ? Colors.blue : Colors.grey,
+        );
+      }
+
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.folder_open, size: 16),
+          const SizedBox(width: 6),
+          Text(
+            category.category,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.blue : Colors.grey,
+            ),
+          ),
+        ],
+      );
+    },
   ),
 )
 ```
@@ -81,6 +104,7 @@ See `example/lib/main.dart` for a full demo.
 | showBottomNav | Show bottom nav | true |
 | withSafeArea | Wrap with SafeArea | true |
 | bgColor | Background color | Color(0xFFEBEFF2) |
+| categoryTabBuilder | Optional builder to customize category tabs | null |
 
 ## Extended usage
 

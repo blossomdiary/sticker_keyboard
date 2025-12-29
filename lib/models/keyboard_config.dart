@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sticker_keyboard/models/category_sticker.dart';
 
+/// Builder for custom category tabs in the sticker keyboard.
+typedef CategoryTabBuilder = Widget Function(
+  BuildContext context,
+  CategorySticker category,
+  bool isSelected,
+);
+
 /// KeyboardConfig for customizations
 class KeyboardConfig {
   /// Constructor
@@ -29,6 +36,7 @@ class KeyboardConfig {
     this.showSearchButton = true,
     this.showBottomNav = true,
     this.stickers = const [],
+    this.categoryTabBuilder,
   });
 
   /// Number of stickers per row
@@ -91,4 +99,8 @@ class KeyboardConfig {
 
   /// Initial stickers
   final List<CategorySticker> stickers;
+
+  /// Optional builder to customize category tabs.
+  /// When null, the default text-based tabs are shown.
+  final CategoryTabBuilder? categoryTabBuilder;
 }
