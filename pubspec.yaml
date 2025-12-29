@@ -1,7 +1,7 @@
 name: sticker_keyboard
 description: Focused sticker keyboard for Flutter apps.
 version: 0.1.0
-homepage: https://github.com/saytoonz/sticker_keyboard
+homepage: https://github.com/blossomdiary/sticker_keyboard
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
