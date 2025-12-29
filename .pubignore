@@ -1,0 +1,37 @@
+# Tooling
+.dart_tool/
+build/
+.idea/
+.vscode/
+.DS_Store
+
+# CI
+.github/
+.gitignore
+
+# Local tooling artifacts
+*.iml
+*.log
+
+# Example app (exclude from pub.dev package)
+example/
+
+# Media assets not required for package use
+screenshots/
+
+# Tests (exclude if you want a minimal package)
+test/
+
+# CocoaPods and platform build artifacts inside example
+example/ios/
+example/macos/
+example/android/
+example/web/
+example/windows/
+example/linux/
+
+# Lockfiles
+example/pubspec.lock
+
+# Docs
+AGENTS.md
