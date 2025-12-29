@@ -186,6 +186,35 @@ class _CustomUiExamplePageState extends State<CustomUiExamplePage> {
                         ),
                       );
                     },
+                    customTabs: [
+                      CustomKeyboardTab(
+                        id: 'action',
+                        tabBuilder: (context, isSelected) => Icon(
+                          Icons.bolt,
+                          color:
+                              isSelected ? _accentColor : Colors.grey.shade400,
+                        ),
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Custom action tab tapped.'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      ),
+                      CustomKeyboardTab(
+                        id: 'custom-page',
+                        tabBuilder: (context, isSelected) => Icon(
+                          Icons.star,
+                          color:
+                              isSelected ? _accentColor : Colors.grey.shade400,
+                        ),
+                        pageBuilder: (context) =>
+                            _buildCustomTabPage(context),
+                      ),
+                    ],
+                    customTabPlacement: CustomTabPlacement.afterRecents,
                     stickers: snapshot.data!,
                   ),
                 );
@@ -211,6 +240,37 @@ class _CustomUiExamplePageState extends State<CustomUiExamplePage> {
       assetUrl,
       height: 120,
       errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+    );
+  }
+
+  Widget _buildCustomTabPage(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.center,
+      color: const Color(0xFFFFF7F4),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.auto_awesome,
+            size: 48,
+            color: Color(0xFFFF635B),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Custom tab page',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Show any custom UI here.',
+            style: TextStyle(color: Colors.grey.shade700),
+          ),
+        ],
+      ),
     );
   }
 }

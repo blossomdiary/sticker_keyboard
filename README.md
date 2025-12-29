@@ -8,6 +8,7 @@ Focused sticker keyboard for Flutter apps. Provide sticker assets (local or netw
 - 🔍 Built-in search functionality
 - 🌐 Support for local assets and remote URLs
 - 🎨 Fully customizable appearance and layout
+- 🧩 Custom tab actions and custom pages
 
 ## Installation
 
@@ -84,9 +85,31 @@ StickerKeyboard(
         ],
       );
     },
+    customTabs: [
+      CustomKeyboardTab(
+        id: 'action',
+        tabBuilder: (context, isSelected) => Icon(
+          Icons.bolt,
+          color: isSelected ? Colors.blue : Colors.grey,
+        ),
+        onTap: () {
+          // Action-only tab
+        },
+      ),
+      CustomKeyboardTab(
+        id: 'custom-page',
+        tabBuilder: (context, isSelected) => const Icon(Icons.star),
+        pageBuilder: (context) => Center(
+          child: Text('Custom page'),
+        ),
+      ),
+    ],
+    customTabPlacement: CustomTabPlacement.afterRecents,
   ),
 )
 ```
+
+When `pageBuilder` is null, the tab behaves like an action button and keeps the current page.
 
 See `example/lib/main.dart` for a full demo.
 
@@ -105,6 +128,8 @@ See `example/lib/main.dart` for a full demo.
 | withSafeArea | Wrap with SafeArea | true |
 | bgColor | Background color | Color(0xFFEBEFF2) |
 | categoryTabBuilder | Optional builder to customize category tabs | null |
+| customTabs | Optional custom tabs with actions or pages | [] |
+| customTabPlacement | Placement of custom tabs | CustomTabPlacement.afterCategories |
 
 ## Extended usage
 

@@ -2,11 +2,34 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sticker_keyboard/models/category_sticker.dart';
+import 'package:sticker_keyboard/models/custom_keyboard_tab.dart';
 import 'package:sticker_keyboard/models/keyboard_config.dart';
 import 'package:sticker_keyboard/models/recent_sticker.dart';
 import 'package:sticker_keyboard/models/sticker.dart';
 import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
 import 'package:sticker_keyboard/widgets/display/sticker_display.dart';
+
+enum _KeyboardTabKind { recents, category, custom }
+
+class _KeyboardTabEntry {
+  _KeyboardTabEntry.recents()
+      : kind = _KeyboardTabKind.recents,
+        categoryName = 'Recents',
+        customTab = null;
+
+  _KeyboardTabEntry.category(this.categoryName)
+      : kind = _KeyboardTabKind.category,
+        customTab = null;
+
+  _KeyboardTabEntry.custom(this.customTab)
+      : kind = _KeyboardTabKind.custom,
+        categoryName = null;
+
+  final _KeyboardTabKind kind;
+  final String? categoryName;
+  final CustomKeyboardTab? customTab;
+  CategorySticker? categorySticker;
+}
 
 class StickerPickerWidget extends StatefulWidget {
   const StickerPickerWidget({
@@ -33,20 +56,30 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
 
   PageController? _pageController;
   TabController? _tabController;
-  final List<String> _tabs = List.empty(growable: true); //[''];
-
-  final List<CategorySticker> _categorySticker = List.empty(growable: true);
+  final List<_KeyboardTabEntry> _tabs = List.empty(growable: true);
 
   List<RecentSticker> _recentSticker = List.empty(growable: true);
 
   bool _loaded = false;
   int _currentTabIndex = 0;
+  int? _recentsTabIndex;
+  bool _isRevertingPage = false;
 
   void updateRecentSticker(List<RecentSticker> recentSticker,
       {bool refresh = false}) {
     _recentSticker = recentSticker;
-    _categorySticker[0] = _categorySticker[0]
-        .copyWith(stickers: _recentSticker.map((e) => e.sticker).toList());
+    final recentsIndex = _recentsTabIndex;
+    if (recentsIndex == null) {
+      return;
+    }
+    final entry = _tabs[recentsIndex];
+    final existing = entry.categorySticker;
+    if (existing == null) {
+      return;
+    }
+    entry.categorySticker = existing.copyWith(
+      stickers: _recentSticker.map((e) => e.sticker).toList(),
+    );
     if (mounted && refresh) {
       setState(() {});
     }
@@ -55,9 +88,6 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
   @override
   void initState() {
     super.initState();
-    if (widget.keyboardConfig.showRecentsTab) {
-      _tabs.add('');
-    }
     _listAssets();
 
     _pageController = PageController(initialPage: initCategory)
@@ -76,8 +106,39 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
       }
     }
 
+    _tabs.clear();
+    _recentsTabIndex = null;
+    final customTabs = widget.keyboardConfig.customTabs;
+    final placement = widget.keyboardConfig.customTabPlacement;
+
+    void addCustomTabs() {
+      for (final tab in customTabs) {
+        _tabs.add(_KeyboardTabEntry.custom(tab));
+      }
+    }
+
+    if (placement == CustomTabPlacement.beforeRecents) {
+      addCustomTabs();
+    }
+
+    if (widget.keyboardConfig.showRecentsTab) {
+      _recentsTabIndex = _tabs.length;
+      _tabs.add(_KeyboardTabEntry.recents());
+    }
+
+    if (placement == CustomTabPlacement.afterRecents) {
+      addCustomTabs();
+    }
+
+    for (final title in tabsTitle) {
+      _tabs.add(_KeyboardTabEntry.category(title));
+    }
+
+    if (placement == CustomTabPlacement.afterCategories) {
+      addCustomTabs();
+    }
+
     //Add titles to tab list and create tab controller
-    _tabs.addAll(tabsTitle);
     _tabController = TabController(
         initialIndex: initCategory, length: _tabs.length, vsync: this)
       ..addListener(() {
@@ -95,7 +156,18 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
     _updateStickers();
   }
 
-  Widget _buildCategory(int index, CategorySticker category) {
+  Widget _buildTab(int index, _KeyboardTabEntry entry) {
+    if (entry.kind == _KeyboardTabKind.custom) {
+      return Tab(
+        child: entry.customTab!.tabBuilder(
+          context,
+          _currentTabIndex == index,
+        ),
+      );
+    }
+
+    final category = entry.categorySticker ??
+        CategorySticker(category: entry.categoryName ?? '');
     final tabBuilder = widget.keyboardConfig.categoryTabBuilder;
     if (tabBuilder != null) {
       return Tab(
@@ -108,7 +180,7 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
     }
 
     return Tab(
-      child: index == 0 && widget.keyboardConfig.showRecentsTab
+      child: entry.kind == _KeyboardTabKind.recents
           ? const Icon(Icons.access_time)
           : Text(
               category.category.toUpperCase(),
@@ -119,43 +191,33 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
 
   // Initialize sticker data
   Future<void> _updateStickers() async {
-    _categorySticker.clear();
-    for (var i = 0; i < _tabs.length; i++) {
-      if (i == 0 && widget.keyboardConfig.showRecentsTab) {
+    for (final entry in _tabs) {
+      if (entry.kind == _KeyboardTabKind.custom) {
+        continue;
+      }
+      if (entry.kind == _KeyboardTabKind.recents) {
         List<Sticker> recents =
             (await StickerPickerInternalUtils().getRecentStickers())
                 .map((e) => e.sticker)
                 .toList();
-        _categorySticker.add(CategorySticker(
+        entry.categorySticker = CategorySticker(
           category: "Recents",
           stickers: recents,
-        ));
-      } else {
-        List<Sticker> stickers = [];
-        final categoryString = _tabs[i];
-
-        for (var sticker in widget.stickers) {
-          if (sticker.category == categoryString) {
-            stickers.addAll(sticker.stickers);
-          }
-        }
-
-        bool isExist = false;
-        for (var categorySticker in _categorySticker) {
-          if (categorySticker.category == _tabs[i]) {
-            categorySticker.stickers.addAll(stickers);
-            isExist = true;
-            break;
-          }
-        }
-
-        if (isExist) continue;
-
-        _categorySticker.add(CategorySticker(
-          category: _tabs[i],
-          stickers: stickers,
-        ));
+        );
+        continue;
       }
+
+      List<Sticker> stickers = [];
+      final categoryName = entry.categoryName ?? '';
+      for (var sticker in widget.stickers) {
+        if (sticker.category == categoryName) {
+          stickers.addAll(sticker.stickers);
+        }
+      }
+      entry.categorySticker = CategorySticker(
+        category: categoryName,
+        stickers: stickers,
+      );
     }
 
     _loaded = true;
@@ -182,12 +244,27 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
                         ? const EdgeInsets.symmetric(horizontal: 10)
                         : EdgeInsets.zero,
                     onTap: (index) {
+                      final previousIndex = _currentTabIndex;
+                      final entry = _tabs[index];
+                      if (entry.kind == _KeyboardTabKind.custom) {
+                        entry.customTab?.onTap?.call();
+                        if (entry.customTab?.pageBuilder == null) {
+                          if (_tabController?.index != previousIndex) {
+                            _tabController!.animateTo(previousIndex);
+                          }
+                          if (_pageController!.hasClients) {
+                            _pageController!.jumpToPage(previousIndex);
+                          }
+                          return;
+                        }
+                      }
+
                       _pageController!.jumpToPage(index);
                     },
-                    tabs: _categorySticker
+                    tabs: _tabs
                         .asMap()
                         .entries
-                        .map((item) => _buildCategory(item.key, item.value))
+                        .map((item) => _buildTab(item.key, item.value))
                         .toList(),
                   ),
                 ),
@@ -196,6 +273,27 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
                     itemCount: _tabs.length,
                     controller: _pageController,
                     onPageChanged: (index) {
+                      if (_isRevertingPage) {
+                        return;
+                      }
+                      final entry = _tabs[index];
+                      if (entry.kind == _KeyboardTabKind.custom &&
+                          entry.customTab?.pageBuilder == null) {
+                        _isRevertingPage = true;
+                        final targetIndex = _currentTabIndex;
+                        if (_pageController!.hasClients) {
+                          _pageController!.jumpToPage(targetIndex);
+                        }
+                        _tabController!.animateTo(
+                          targetIndex,
+                          duration:
+                              widget.keyboardConfig.tabIndicatorAnimDuration,
+                        );
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _isRevertingPage = false;
+                        });
+                        return;
+                      }
                       _tabController!.animateTo(
                         index,
                         duration:
@@ -203,22 +301,39 @@ class StickerPickerWidgetState extends State<StickerPickerWidget>
                       );
                     },
                     itemBuilder: (context, index) {
-                      if (index == 0 && _categorySticker[0].stickers.isEmpty) {
+                      final entry = _tabs[index];
+                      if (entry.kind == _KeyboardTabKind.custom) {
+                        final pageBuilder = entry.customTab?.pageBuilder;
+                        if (pageBuilder != null) {
+                          return pageBuilder(context);
+                        }
+                        return const SizedBox.shrink();
+                      }
+
+                      final stickerCategory = entry.categorySticker;
+                      if (entry.kind == _KeyboardTabKind.recents &&
+                          (stickerCategory == null ||
+                              stickerCategory.stickers.isEmpty)) {
                         return Center(
                           child: widget.keyboardConfig.noRecents,
                         );
                       }
 
+                      if (stickerCategory == null) {
+                        return const SizedBox.shrink();
+                      }
+
                       return StickerDisplay(
-                          stickerModel: _categorySticker[index],
-                          keyboardConfig: widget.keyboardConfig,
-                          onStickerSelected: widget.onStickerSelected,
-                          scrollStream: widget.scrollStream,
-                          onUpdateRecent: (recentSticker, refresh) =>
-                              updateRecentSticker(
-                                recentSticker,
-                                refresh: refresh,
-                              ));
+                        stickerModel: stickerCategory,
+                        keyboardConfig: widget.keyboardConfig,
+                        onStickerSelected: widget.onStickerSelected,
+                        scrollStream: widget.scrollStream,
+                        onUpdateRecent: (recentSticker, refresh) =>
+                            updateRecentSticker(
+                          recentSticker,
+                          refresh: refresh,
+                        ),
+                      );
                     },
                   ),
                 ),
