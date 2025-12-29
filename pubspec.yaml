@@ -1,7 +1,7 @@
-name: flutter_social_keyboard
-description: Fully customizable Emoji picker, Gif picker and Sticker for your flutter social media and chat applications
-version: 0.0.3
-homepage: https://github.com/saytoonz/flutter_social_keyboard
+name: sticker_keyboard
+description: Focused sticker keyboard for Flutter apps.
+version: 0.1.0
+homepage: https://github.com/saytoonz/sticker_keyboard
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -11,8 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.4.1
-  emoji_picker_flutter: ^3.1.0
-  http: ^1.1.0
   shared_preferences: ^2.0.15
 
 dev_dependencies:
@@ -26,7 +24,3 @@ flutter:
   #     # some_platform:
   #     #   pluginClass: somePluginClass
   
-  assets:
-    - packages/flutter_social_keyboard/icons/emoji.png
-    - packages/flutter_social_keyboard/icons/gif.png
-    - packages/flutter_social_keyboard/icons/sticker.png

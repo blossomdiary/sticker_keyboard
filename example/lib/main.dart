@@ -1,9 +1,8 @@
-import 'dart:io';
+import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_keyboard/flutter_social_keyboard.dart';
-import 'package:flutter_social_keyboard/models/category_sticker.dart';
+import 'package:flutter/services.dart';
+import 'package:sticker_keyboard/sticker_keyboard.dart';
 
 void main() {
   runApp(
@@ -20,10 +19,59 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
-  Emoji? selectedEmoji;
-  GiphyGif? selectedGif;
+class _MyAppState extends State<MyApp> {
   Sticker? selectedSticker;
+  late Future<List<CategorySticker>> _stickerPacksFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _stickerPacksFuture = _loadStickerPacks();
+  }
+
+  Future<List<CategorySticker>> _loadStickerPacks() async {
+    final manifestContent = await rootBundle.loadString('AssetManifest.json');
+    final Map<String, dynamic> manifestMap =
+        json.decode(manifestContent) as Map<String, dynamic>;
+
+    final stickerAssets = manifestMap.keys
+        .where((path) => path.startsWith('assets/stickers/'))
+        .where((path) {
+          final lower = path.toLowerCase();
+          return lower.endsWith('.webp') ||
+              lower.endsWith('.png') ||
+              lower.endsWith('.jpg') ||
+              lower.endsWith('.gif') ||
+              lower.endsWith('.jpeg');
+        })
+        .toList()
+      ..sort();
+
+    final Map<String, List<String>> byCategory = {};
+    for (final asset in stickerAssets) {
+      final parts = asset.split('/');
+      if (parts.length < 3) {
+        continue;
+      }
+      final category = parts[2];
+      byCategory.putIfAbsent(category, () => []).add(asset);
+    }
+
+    final categories = byCategory.keys.toList()..sort();
+    return categories
+        .map(
+          (category) => CategorySticker(
+            category: category,
+            stickers: byCategory[category]!
+                .map((assetUrl) => Sticker(
+                      assetUrl: assetUrl,
+                      category: category,
+                    ))
+                .toList(),
+          ),
+        )
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +82,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Flutter Social Keyboard'),
+        title: const Text('Sticker Keyboard'),
       ),
       body: Column(
         children: [
@@ -43,44 +91,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  selectedEmoji?.emoji ?? "NO emoji selected",
-                  style: const TextStyle(
-                    fontSize: 40,
-                  ),
-                ),
-                //
-                const SizedBox(
-                  height: 10,
-                ),
-                selectedGif != null
-                    ? CachedNetworkImage(
-                        imageUrl: selectedGif!.images!.previewGif!.url!,
-                        fit: BoxFit.fitHeight,
-                        height: 150,
-                        errorWidget: ((context, url, error) =>
-                            Text(error.toString())),
-                        placeholder: ((context, url) =>
-                            const CircularProgressIndicator.adaptive()),
-                      )
-                    : const Text(
-                        "NO GIF selected",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                //
-                const SizedBox(
-                  height: 10,
-                ),
-
                 selectedSticker != null
-                    ? Image.asset(
-                        selectedSticker!.assetUrl,
-                        height: 100,
-                      )
+                    ? _buildStickerPreview(selectedSticker!)
                     : const Text(
-                        "NO Sticker selected",
+                        'No sticker selected',
                         style: TextStyle(
                           fontSize: 20,
                         ),
@@ -89,149 +103,79 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             ),
           ),
           SizedBox(
-            height: 280,
-            child: FlutterSocialKeyboard(
-              onEmojiSelected: (Category? category, Emoji emoji) {
-                // Do something when emoji is tapped (optional)
-                // print(emoji);
-                setState(() {
-                  selectedEmoji = emoji;
-                });
-              },
-              onGifSelected: (GiphyGif gif) {
-                // Do something when gif is tapped (optional)
-                // print(gif);
-                setState(() {
-                  selectedGif = gif;
-                });
-              },
-              onStickerSelected: (Sticker sticker) {
-                // Do something when sticker is tapped (optional)
-                // print(sticker.toJson());
-                setState(() {
-                  selectedSticker = sticker;
-                });
-              },
-              onBackspacePressed: () {
-                // Do something when the user taps the backspace button (optional)
-                // print("Backspace button pressed");
-              },
-              keyboardConfig: KeyboardConfig(
-                useEmoji: false,
-                useGif: false,
-                useSticker: true,
-                giphyAPIKey: "",
-                gifTabs: ["Hey", "One", 'Haha', 'Sad', 'Love', 'Reaction'],
-                gifHorizontalSpacing: 5,
-                gifVerticalSpacing: 5,
-                gifColumns: 3,
-                gifLang: GiphyLanguage.english,
-                stickerColumns: 5,
-                stickerHorizontalSpacing: 5,
-                stickerVerticalSpacing: 5,
-                withSafeArea: true,
-                emojiColumns: 9,
-                emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                emojiVerticalSpacing: 0,
-                emojiHorizontalSpacing: 0,
-                gridPadding: EdgeInsets.zero,
-                initCategory: Category.RECENT,
-                bgColor: const Color(0xFFF2F2F2),
-                indicatorColor: Colors.blue,
-                iconColor: Colors.grey,
-                iconColorSelected: Colors.blue,
-                progressIndicatorColor: Colors.blue,
-                backspaceColor: Colors.blue,
-                skinToneDialogBgColor: Colors.white,
-                skinToneIndicatorColor: Colors.grey,
-                enableSkinTones: true,
-                showRecentsTab: false,
-                recentsLimit: 28,
-                noRecents: const Text(
-                  'No Recents',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black26,
+            height: 320,
+            child: FutureBuilder<List<CategorySticker>>(
+              future: _stickerPacksFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text('No sticker packs found.'),
+                  );
+                }
+
+                return StickerKeyboard(
+                  onStickerSelected: (Sticker sticker) {
+                    setState(() {
+                      selectedSticker = sticker;
+                    });
+                  },
+                  keyboardConfig: KeyboardConfig(
+                    stickerColumns: 5,
+                    stickerHorizontalSpacing: 5,
+                    stickerVerticalSpacing: 5,
+                    withSafeArea: true,
+                    gridPadding: EdgeInsets.zero,
+                    bgColor: const Color(0xFFF2F2F2),
+                    indicatorColor: Colors.blue,
+                    iconColor: Colors.grey,
+                    iconColorSelected: Colors.blue,
+                    progressIndicatorColor: Colors.blue,
+                    backspaceColor: Colors.blue,
+                    showRecentsTab: true,
+                    recentsLimit: 28,
+                    noRecents: const Text(
+                      'No Recents',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black26,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    replaceRecentOnLimitExceed: true,
+                    showBottomNav: true,
+                    tabIndicatorAnimDuration: kTabScrollDuration,
+                    showBackSpace: false,
+                    showSearchButton: true,
+                    stickers: snapshot.data!,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                replaceRecentOnLimitExceed: true,
-                showBottomNav: false,
-                tabIndicatorAnimDuration: kTabScrollDuration,
-                categoryIcons: const CategoryIcons(),
-                buttonMode: ButtonMode.CUPERTINO,
-                showBackSpace: true,
-                showSearchButton: true,
-                stickers: [
-                  CategorySticker(
-                    category: 'Test',
-                    stickers: [
-                      Sticker(
-                          assetUrl:
-                              'https://firebasestorage.googleapis.com/v0/b/flower-diary-8faba.appspot.com/o/stickers%2Fbear%2Fstar_twinkle.png?alt=media&token=8145d903-686f-4186-ad4b-a41883e84d90',
-                          category: 'Test'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test')
-                    ],
-                  ),
-                  CategorySticker(
-                    category: 'Test 2',
-                    stickers: [
-                      Sticker(
-                          assetUrl:
-                              'https://firebasestorage.googleapis.com/v0/b/flower-diary-8faba.appspot.com/o/stickers%2Fbear%2Fstar_twinkle.png?alt=media&token=8145d903-686f-4186-ad4b-a41883e84d90',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                      Sticker(
-                          assetUrl: 'assets/stickers/mood/sticker_1.webp',
-                          category: 'Test2'),
-                    ],
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStickerPreview(Sticker sticker) {
+    final assetUrl = sticker.assetUrl;
+    if (assetUrl.startsWith('http')) {
+      return Image.network(
+        assetUrl,
+        height: 120,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    }
+
+    return Image.asset(
+      assetUrl,
+      height: 120,
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
     );
   }
 }

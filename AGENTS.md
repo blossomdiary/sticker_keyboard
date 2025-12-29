@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `lib/` holds the public package entrypoint (`flutter_social_keyboard.dart`) plus internal widgets, models, and utils under `lib/widgets`, `lib/models`, and `lib/utils`.
+- `lib/` holds the public package entrypoint (`sticker_keyboard.dart`) plus internal widgets, models, and utils under `lib/widgets`, `lib/models`, and `lib/utils`.
 - `example/` contains a runnable Flutter demo app with its own `lib/`, `test/`, and platform folders (Android/iOS/macOS).
 - `test/` is the package-level test suite (currently minimal).
 - `screenshots/` and `lib/icons/` store documentation assets and package icon resources.
@@ -30,5 +30,4 @@
 - Link related issues when applicable.
 
 ## Configuration & Assets
-- GIF search requires a Giphy API key; wire it through `KeyboardConfig.giphyAPIKey`.
 - Sticker assets are expected under a project `assets/stickers/` tree in the host app; update the host app’s `pubspec.yaml` accordingly.

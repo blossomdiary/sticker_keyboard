@@ -1,6 +1,6 @@
-# flutter_social_keyboard_example
+# sticker_keyboard_example
 
-Demonstrates how to use the flutter_social_keyboard plugin.
+Demonstrates how to use the sticker_keyboard plugin.
 
 ## Getting Started
 

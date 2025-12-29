@@ -4,11 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_social_keyboard/models/keyboard_config.dart';
-import 'package:flutter_social_keyboard/models/recent_sticker.dart';
-import 'package:flutter_social_keyboard/models/sticker.dart';
-import 'package:flutter_social_keyboard/models/category_sticker.dart';
-import 'package:flutter_social_keyboard/utils/sticker_picker_internal_utils.dart';
+import 'package:sticker_keyboard/models/keyboard_config.dart';
+import 'package:sticker_keyboard/models/recent_sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/models/category_sticker.dart';
+import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
 
 class StickerDisplay extends StatefulWidget {
   final CategorySticker stickerModel;
@@ -79,12 +79,12 @@ class _StickerDisplayState extends State<StickerDisplay> {
                         .addStickerToRecentlyUsed(
                             sticker: widget.stickerModel.stickers[index],
                             config: widget.keyboardConfig)
-                        .then((newRecentEmoji) => {
+                        .then((newRecentStickers) => {
                               // we don't want to rebuild the widget if user is currently on
-                              // the RECENT tab, it will make emojis jump since sorting
+                              // the RECENT tab, it will make stickers jump since sorting
                               // is based on the use frequency
                               widget.onUpdateRecent(
-                                  newRecentEmoji,
+                                  newRecentStickers,
                                   widget.stickerModel.stickers[index]
                                           .category !=
                                       "Recents")
@@ -95,7 +95,7 @@ class _StickerDisplayState extends State<StickerDisplay> {
                         widget.stickerModel.stickers[index]);
                   }
                 },
-                child: assetUrl.startsWith('https')
+                child: assetUrl.startsWith('http')
                     ? CachedNetworkImage(
                         imageUrl: assetUrl,
                         placeholder: (context, url) =>

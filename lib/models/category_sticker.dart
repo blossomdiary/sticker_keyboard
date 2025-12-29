@@ -1,4 +1,4 @@
-import 'package:flutter_social_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
 
 class CategorySticker {
   late String category;

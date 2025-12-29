@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_social_keyboard/models/category_sticker.dart';
-import 'package:flutter_social_keyboard/models/keyboard_config.dart';
-import 'package:flutter_social_keyboard/models/recent_sticker.dart';
-import 'package:flutter_social_keyboard/models/sticker.dart';
-import 'package:flutter_social_keyboard/utils/sticker_picker_internal_utils.dart';
-import 'package:flutter_social_keyboard/widgets/display/sticker_display.dart';
+import 'package:sticker_keyboard/models/category_sticker.dart';
+import 'package:sticker_keyboard/models/keyboard_config.dart';
+import 'package:sticker_keyboard/models/recent_sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
+import 'package:sticker_keyboard/widgets/display/sticker_display.dart';
 
 class StickerPickerWidget extends StatefulWidget {
   const StickerPickerWidget({

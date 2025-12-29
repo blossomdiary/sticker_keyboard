@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_social_keyboard/models/keyboard_config.dart';
-import 'package:flutter_social_keyboard/models/recent_sticker.dart';
-import 'package:flutter_social_keyboard/models/sticker.dart';
-import 'package:flutter_social_keyboard/utils/sticker_picker_internal_utils.dart';
-import 'package:flutter_social_keyboard/widgets/sticker_picker_widget.dart';
+import 'package:sticker_keyboard/models/keyboard_config.dart';
+import 'package:sticker_keyboard/models/recent_sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
+import 'package:sticker_keyboard/widgets/sticker_picker_widget.dart';
 
 /// Helper class that provides extended usage
 class StickerPickerUtils {

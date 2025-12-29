@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'dart:math';
 
-import 'package:flutter_social_keyboard/models/keyboard_config.dart';
-import 'package:flutter_social_keyboard/models/recent_sticker.dart';
-import 'package:flutter_social_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/models/keyboard_config.dart';
+import 'package:sticker_keyboard/models/recent_sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StickerPickerInternalUtils {

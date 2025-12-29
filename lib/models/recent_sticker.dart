@@ -1,4 +1,4 @@
-import 'package:flutter_social_keyboard/models/sticker.dart';
+import 'package:sticker_keyboard/models/sticker.dart';
 
 class RecentSticker {
   /// Constructor
@@ -7,10 +7,10 @@ class RecentSticker {
   /// Sticker instance
   final Sticker sticker;
 
-  /// Counter how often emoji has been used before
+  /// Counter how often a sticker has been used before
   int counter = 0;
 
-  /// Parse RecentEmoji from json
+  /// Parse RecentSticker from json
   static RecentSticker fromJson(dynamic json) {
     return RecentSticker(
       Sticker.fromJson(json['sticker'] as Map<String, dynamic>),
@@ -18,7 +18,7 @@ class RecentSticker {
     );
   }
 
-  /// Encode RecentEmoji to json
+  /// Encode RecentSticker to json
   Map<String, dynamic> toJson() => {
         'sticker': sticker,
         'counter': counter,
