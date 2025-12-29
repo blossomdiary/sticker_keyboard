@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sticker_keyboard/models/keyboard_config.dart';
 import 'package:sticker_keyboard/models/sticker.dart';
-import 'package:sticker_keyboard/utils/sticker_picker_utils.dart';
+import 'package:sticker_keyboard/utils/sticker_keyboard_utils.dart';
 import 'package:sticker_keyboard/widgets/search/sticker_search.dart';
 import 'package:sticker_keyboard/widgets/sticker_picker_widget.dart';
 
@@ -135,7 +135,7 @@ class _StickerKeyboardState extends State<StickerKeyboard> {
 
                   setState(() => _isSearching = true);
                   _recentSticker.clear();
-                  _recentSticker.addAll((await StickerPickerUtils()
+                  _recentSticker.addAll((await StickerKeyboardUtils()
                           .getRecentStickers())
                       .map((e) => e.sticker)
                       .toList());

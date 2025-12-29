@@ -8,15 +8,16 @@ import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
 import 'package:sticker_keyboard/widgets/sticker_picker_widget.dart';
 
 /// Helper class that provides extended usage
-class StickerPickerUtils {
+class StickerKeyboardUtils {
   /// Singleton Constructor
-  factory StickerPickerUtils() {
+  factory StickerKeyboardUtils() {
     return _singleton;
   }
 
-  StickerPickerUtils._internal();
+  StickerKeyboardUtils._internal();
 
-  static final StickerPickerUtils _singleton = StickerPickerUtils._internal();
+  static final StickerKeyboardUtils _singleton =
+      StickerKeyboardUtils._internal();
   // final List<Sticker> _allAvailableStickerEntities = [];
 
   /// Returns list of recently used stickers from cache

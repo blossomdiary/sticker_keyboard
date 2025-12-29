@@ -109,8 +109,8 @@ See `example/lib/main.dart` for a full demo.
 ## Extended usage
 
 ```dart
-final recentStickers = await StickerPickerUtils().getRecentStickers();
-final results = await StickerPickerUtils().searchSticker(
+final recentStickers = await StickerKeyboardUtils().getRecentStickers();
+final results = await StickerKeyboardUtils().searchSticker(
   searchQuery: 'funny',
   context: context,
 );

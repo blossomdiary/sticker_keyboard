@@ -4,7 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:sticker_keyboard/models/keyboard_config.dart';
 import 'package:sticker_keyboard/models/sticker.dart';
 import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
-import 'package:sticker_keyboard/utils/sticker_picker_utils.dart';
+import 'package:sticker_keyboard/utils/sticker_keyboard_utils.dart';
 
 class StickerSearch extends StatefulWidget {
   const StickerSearch({
@@ -53,7 +53,7 @@ class Calculates extends State<StickerSearch> {
       });
       return;
     }
-    List<Sticker> result = await StickerPickerUtils().searchSticker(
+    List<Sticker> result = await StickerKeyboardUtils().searchSticker(
       searchQuery: _textController.text,
       context: context,
     );
