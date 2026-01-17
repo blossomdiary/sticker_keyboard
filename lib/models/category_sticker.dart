@@ -1,9 +1,11 @@
 import 'package:sticker_keyboard/models/sticker.dart';
 
+/// A category and its associated stickers.
 class CategorySticker {
   late String category;
   List<Sticker> stickers = [];
 
+  /// Creates a category with its stickers.
   CategorySticker({
     required this.category,
     this.stickers = const [],

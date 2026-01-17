@@ -8,6 +8,7 @@ import 'package:sticker_keyboard/utils/sticker_keyboard_utils.dart';
 import 'package:sticker_keyboard/widgets/search/sticker_search.dart';
 import 'package:sticker_keyboard/widgets/sticker_picker_widget.dart';
 
+/// Sticker keyboard widget with tabs, search, and recents.
 class StickerKeyboard extends StatefulWidget {
   /// Optional keyboard configuration.
   final KeyboardConfig keyboardConfig;
@@ -18,6 +19,7 @@ class StickerKeyboard extends StatefulWidget {
   /// Optional callback function for when Backspace is pressed.
   final Function()? onBackspacePressed;
 
+  /// Creates a sticker keyboard widget.
   const StickerKeyboard({
     Key? key,
     this.keyboardConfig = const KeyboardConfig(),

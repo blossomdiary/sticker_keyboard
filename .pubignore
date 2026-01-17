@@ -13,16 +13,13 @@ build/
 *.iml
 *.log
 
-# Example app (exclude from pub.dev package)
-example/
-
 # Media assets not required for package use
 screenshots/
 
-# Tests (exclude if you want a minimal package)
-test/
-
 # CocoaPods and platform build artifacts inside example
+example/assets/
+example/.dart_tool/
+example/build/
 example/ios/
 example/macos/
 example/android/
@@ -32,6 +29,7 @@ example/linux/
 
 # Lockfiles
 example/pubspec.lock
+pubspec.lock
 
 # Docs
 AGENTS.md

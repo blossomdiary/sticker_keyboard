@@ -113,6 +113,11 @@ When `pageBuilder` is null, the tab behaves like an action button and keeps the 
 
 See `example/lib/main.dart` for a full demo.
 
+## Documentation
+
+API docs are published on pub.dev:
+https://pub.dev/documentation/sticker_keyboard/latest/
+
 ## KeyboardConfig (sticker-related)
 
 | property | description | default |
@@ -143,4 +148,5 @@ final results = await StickerKeyboardUtils().searchSticker(
 
 ## Issues
 
-Please file bugs and feature requests in the issue tracker.
+Please file bugs and feature requests in the issue tracker:
+https://github.com/blossomdiary/sticker_keyboard/issues

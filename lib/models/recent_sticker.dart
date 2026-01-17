@@ -1,5 +1,6 @@
 import 'package:sticker_keyboard/models/sticker.dart';
 
+/// A sticker with a usage counter for recents.
 class RecentSticker {
   /// Constructor
   RecentSticker(this.sticker, this.counter);

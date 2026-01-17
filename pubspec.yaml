@@ -3,16 +3,17 @@ description: Sticker Keyboard for Flutter apps with simple setup, category tabs,
 version: 0.1.0
 homepage: https://blossomdiary.dev
 repository: https://github.com/blossomdiary/sticker_keyboard
+issue_tracker: https://github.com/blossomdiary/sticker_keyboard/issues
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
   flutter: ">=3.19.3"
 
 dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.4.1
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:

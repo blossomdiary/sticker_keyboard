@@ -9,7 +9,7 @@ typedef CategoryTabBuilder = Widget Function(
   bool isSelected,
 );
 
-/// KeyboardConfig for customizations
+/// Configuration options for the sticker keyboard.
 class KeyboardConfig {
   /// Constructor
   const KeyboardConfig({
@@ -97,7 +97,7 @@ class KeyboardConfig {
   /// Replace latest sticker on recents list on limit exceed
   final bool replaceRecentOnLimitExceed;
 
-  // Show bottom navigator
+  /// Show bottom navigation bar.
   final bool showBottomNav;
 
   /// Initial stickers

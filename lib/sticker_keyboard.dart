@@ -1,3 +1,4 @@
+/// Public entrypoint for the sticker keyboard package.
 library sticker_keyboard;
 
 export 'package:sticker_keyboard/src/sticker_keyboard.dart';
