@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sticker_keyboard/models/keyboard_config.dart';
 import 'package:sticker_keyboard/models/sticker.dart';
 import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
 import 'package:sticker_keyboard/utils/sticker_keyboard_utils.dart';
+import 'package:sticker_keyboard/widgets/sticker_image.dart';
 
 class StickerSearch extends StatefulWidget {
   const StickerSearch({
@@ -147,21 +147,10 @@ class Calculates extends State<StickerSearch> {
                         );
                       }
                     },
-                    child: stickers[i].assetUrl.startsWith('http')
-                        ? CachedNetworkImage(
-                            imageUrl: stickers[i].assetUrl,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator.adaptive(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            stickers[i].assetUrl,
-                            errorBuilder: ((context, error, stackTrace) =>
-                                const Icon(Icons.error)),
-                            fit: BoxFit.cover,
-                          ),
+                    child: StickerImage(
+                      assetUrl: stickers[i].assetUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
               ],
             ),

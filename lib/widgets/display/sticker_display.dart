@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,6 +8,7 @@ import 'package:sticker_keyboard/models/recent_sticker.dart';
 import 'package:sticker_keyboard/models/sticker.dart';
 import 'package:sticker_keyboard/models/category_sticker.dart';
 import 'package:sticker_keyboard/utils/sticker_picker_internal_utils.dart';
+import 'package:sticker_keyboard/widgets/sticker_image.dart';
 
 class StickerDisplay extends StatefulWidget {
   final CategorySticker stickerModel;
@@ -95,21 +95,10 @@ class _StickerDisplayState extends State<StickerDisplay> {
                         widget.stickerModel.stickers[index]);
                   }
                 },
-                child: assetUrl.startsWith('http')
-                    ? CachedNetworkImage(
-                        imageUrl: assetUrl,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator.adaptive(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.contain,
-                      )
-                    : Image.asset(
-                        assetUrl,
-                        errorBuilder: ((context, error, stackTrace) =>
-                            const Icon(Icons.error)),
-                        fit: BoxFit.contain,
-                      ),
+                child: StickerImage(
+                  assetUrl: assetUrl,
+                  fit: BoxFit.contain,
+                ),
               );
             },
           );
