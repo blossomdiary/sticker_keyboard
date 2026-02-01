@@ -1,5 +1,9 @@
 PODS:
+  - dotlottie_flutter (0.0.2):
+    - FlutterMacOS
+    - LottieFiles-dotLottie-iOS (= 0.11.1)
   - FlutterMacOS (1.0.0)
+  - LottieFiles-dotLottie-iOS (0.11.1)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -11,12 +15,19 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - dotlottie_flutter (from `Flutter/ephemeral/.symlinks/plugins/dotlottie_flutter/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin`)
 
+SPEC REPOS:
+  trunk:
+    - LottieFiles-dotLottie-iOS
+
 EXTERNAL SOURCES:
+  dotlottie_flutter:
+    :path: Flutter/ephemeral/.symlinks/plugins/dotlottie_flutter/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   path_provider_foundation:
@@ -27,11 +38,13 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin
 
 SPEC CHECKSUMS:
+  dotlottie_flutter: f286e766a9b33b4f38cb3dbee9900c9969750a48
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  LottieFiles-dotLottie-iOS: e9b34e7cff6d04f5affd97336c2dab934b86e6fb
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
-PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
+PODFILE CHECKSUM: 8d40c19d3cbdb380d870685c3a564c989f1efa52
 
 COCOAPODS: 1.16.2

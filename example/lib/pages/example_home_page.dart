@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sticker_keyboard_example/pages/custom_ui_example_page.dart';
 import 'package:sticker_keyboard_example/pages/default_example_page.dart';
+import 'package:sticker_keyboard_example/pages/lottie_network_example_page.dart';
 
 class ExampleHomePage extends StatelessWidget {
   const ExampleHomePage({super.key});
@@ -37,6 +38,17 @@ class ExampleHomePage extends StatelessWidget {
                         .pushNamed(CustomUiExamplePage.routeName);
                   },
                   child: const Text('UI Custom Example'),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(LottieNetworkExamplePage.routeName);
+                  },
+                  child: const Text('Lottie Network Example'),
                 ),
               ),
             ],
